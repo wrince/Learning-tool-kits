@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator & Dictionary</title>
+    <style>
+        /* Background image style */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            background-image: url('https://www.w3schools.com/w3images/rocks.jpg'); /* Replace with your own cool background image */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            background-blur: 10px;
+        }
+        
+        /* Slanted "Helping Tools" text at the top */
+        .main-text {
+            font-size: 50px;
+            font-weight: bold;
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-10deg);
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
+            letter-spacing: 3px;
+            color: #ff5733; /* Cool color (orange/red) */
+        }
+
+        .container {
+            max-width: 450px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background for better text visibility */
+        }
+
+        .hidden { display: none; }
+        button { 
+            padding: 12px; 
+            margin: 8px; 
+            font-size: 18px; 
+            border: none; 
+            background-color: #222; 
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+
+        input { 
+            width: 80%; 
+            padding: 12px; 
+            font-size: 18px; 
+            margin-bottom: 12px; 
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        h1 { font-size: 40px; font-weight: bold; margin-top: 100px; }
+
+        .btn-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Helping Tools Text -->
+    <div class="main-text">Helping Tools</div>
+
+    <h1>Scientific Calculator & Dictionary</h1>
+    
+    <!-- Navigation Buttons -->
+    <div class="btn-container">
+        <button onclick="showSection('calculator')">Calculator</button>
+        <button onclick="showSection('dictionary')">Dictionary</button>
+    </div>
+
+    <!-- Calculator Section -->
+    <div id="calculator" class="container">
+        <h2>Scientific Calculator</h2>
+        <input type="text" id="display" readonly>
+        <br>
+        <button onclick="appendValue('1')">1</button>
+        <button onclick="appendValue('2')">2</button>
+        <button onclick="appendValue('3')">3</button>
+        <button onclick="appendValue('+')">+</button>
+        <br>
+        <button onclick="appendValue('4')">4</button>
+        <button onclick="appendValue('5')">5</button>
+        <button onclick="appendValue('6')">6</button>
+        <button onclick="appendValue('-')">-</button>
+        <br>
+        <button onclick="appendValue('7')">7</button>
+        <button onclick="appendValue('8')">8</button>
+        <button onclick="appendValue('9')">9</button>
+        <button onclick="appendValue('*')">*</button>
+        <br>
+        <button onclick="appendValue('0')">0</button>
+        <button onclick="clearDisplay()">C</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="appendValue('/')">/</button>
+        <br>
+        <!-- Advanced Functions -->
+        <button onclick="appendValue('Math.sqrt(')">√</button>
+        <button onclick="appendValue('Math.pow(')">x^y</button>
+        <button onclick="appendValue('Math.sin(')">sin</button>
+        <button onclick="appendValue('Math.cos(')">cos</button>
+        <button onclick="appendValue('Math.tan(')">tan</button>
+        <br>
+        <button onclick="appendValue('Math.log(')">log</button>
+        <button onclick="appendValue('Math.exp(')">exp</button>
+        <button onclick="appendValue('Math.PI')">π</button>
+        <button onclick="appendValue('Math.E')">e</button>
+    </div>
+
+    <!-- Dictionary Section -->
+    <div id="dictionary" class="container hidden">
+        <h2>Dictionary</h2>
+        <input type="text" id="wordInput" placeholder="Enter a word">
+        <button onclick="searchWord()">Search</button>
+        <p id="definition"></p>
+    </div>
+
+    <script>
+        function showSection(section) {
+            document.getElementById("calculator").classList.add("hidden");
+            document.getElementById("dictionary").classList.add("hidden");
+            document.getElementById(section).classList.remove("hidden");
+        }
+
+        // Calculator Functions
+        function appendValue(value) {
+            document.getElementById("display").value += value;
+        }
+        function calculate() {
+            try {
+                document.getElementById("display").value = eval(document.getElementById("display").value);
+            } catch {
+                alert("Invalid Expression");
+            }
+        }
+        function clearDisplay() {
+            document.getElementById("display").value = "";
+        }
+
+        // Dictionary Function (Using API)
+        async function searchWord() {
+            let word = document.getElementById("wordInput").value;
+            let response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+            let data = await response.json();
+            document.getElementById("definition").innerText = data[0]?.meanings[0]?.definitions[0]?.definition || "Word not found!";
+        }
+    </script>
+
+</body>
+</html>
